@@ -2,41 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* SmartSignal Pro v2 - Elite AI Trading Theme
+All colors MUST be HSL for proper dark/light mode support.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Light theme - Professional trading interface */
+    --background: 216 13% 98%;
+    --foreground: 220 13% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 13% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 13% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 216 100% 45%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 216 13% 96%;
+    --secondary-foreground: 220 13% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 216 13% 96%;
+    --muted-foreground: 220 9% 50%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 216 13% 96%;
+    --accent-foreground: 220 13% 20%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --success: 142 70% 33%;
+    --success-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    --border: 216 13% 91%;
+    --input: 216 13% 91%;
+    --ring: 216 100% 45%;
+
+    --radius: 0.75rem;
+
+    /* Trading-specific colors */
+    --trading-primary: 216 100% 45%;
+    --trading-secondary: 200 100% 94%;
+    --trading-accent: 142 76% 36%;
+    --trading-danger: 0 84% 60%;
+    --trading-warning: 38 92% 50%;
+    
+    /* AI theme colors */
+    --ai-bg-start: 220 13% 95%;
+    --ai-bg-end: 216 13% 91%;
+    --ai-border: 142 76% 36%;
+    --ai-header: 142 76% 36%;
+    --ai-content: 220 13% 20%;
+    --ai-glow: 142 76% 36%;
+
+    /* Neon effects */
+    --neon-primary: 216 100% 45%;
+    --neon-success: 142 76% 36%;
+    --neon-danger: 0 84% 60%;
+
+    /* Gradients */
+    --gradient-trading: linear-gradient(135deg, hsl(216 100% 45%) 0%, hsl(142 76% 36%) 100%);
+    --gradient-ai: linear-gradient(135deg, hsl(220 13% 95%) 0%, hsl(216 13% 91%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(216 13% 98%) 100%);
+
+    /* Shadows and glows */
+    --shadow-trading: 0 4px 16px hsla(216 100% 45% / 0.25);
+    --shadow-ai: 0 4px 12px hsla(142 76% 36% / 0.35);
+    --glow-primary: 0 0 10px hsla(216 100% 45% / 0.7);
+    --glow-success: 0 0 10px hsla(142 76% 36% / 0.7);
+    --glow-ai: 0 0 15px hsla(142 76% 36% / 0.8);
+
+    /* Fonts */
+    --font-trading: 'Courier New', 'Monaco', monospace;
+    --font-headers: 'Inter', 'Arial', sans-serif;
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +96,69 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    /* Dark theme - Cyberpunk trading interface */
+    --background: 220 27% 6%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 220 27% 8%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 220 27% 8%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 220 27% 6%;
 
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 220 27% 12%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 220 27% 12%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 220 27% 12%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --success: 142 76% 45%;
+    --success-foreground: 220 27% 6%;
+
+    --border: 220 27% 18%;
+    --input: 220 27% 18%;
+    --ring: 142 76% 36%;
+
+    /* Dark trading colors */
+    --trading-primary: 142 76% 36%;
+    --trading-secondary: 220 27% 12%;
+    --trading-accent: 142 76% 45%;
+    --trading-danger: 0 84% 60%;
+    --trading-warning: 38 92% 50%;
+    
+    /* Dark AI theme */
+    --ai-bg-start: 220 27% 8%;
+    --ai-bg-end: 220 27% 12%;
+    --ai-border: 142 76% 45%;
+    --ai-header: 142 76% 55%;
+    --ai-content: 210 40% 95%;
+    --ai-glow: 142 76% 45%;
+
+    /* Dark neon effects */
+    --neon-primary: 142 76% 45%;
+    --neon-success: 142 76% 55%;
+    --neon-danger: 0 84% 70%;
+
+    /* Dark gradients */
+    --gradient-trading: linear-gradient(135deg, hsl(220 27% 8%) 0%, hsl(220 27% 12%) 100%);
+    --gradient-ai: linear-gradient(135deg, hsl(220 27% 6%) 0%, hsl(220 27% 10%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(220 27% 8%) 0%, hsl(220 27% 10%) 100%);
+
+    /* Dark shadows and glows */
+    --shadow-trading: 0 4px 16px hsla(142 76% 36% / 0.35);
+    --shadow-ai: 0 4px 12px hsla(142 76% 45% / 0.35);
+    --glow-primary: 0 0 10px hsla(142 76% 45% / 0.7);
+    --glow-success: 0 0 10px hsla(142 76% 55% / 0.7);
+    --glow-ai: 0 0 15px hsla(142 76% 45% / 0.8);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -101,5 +177,120 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-trading);
+  }
+}
+
+@layer components {
+  /* Trading Widget Animations */
+  .trading-glow {
+    animation: trading-pulse 2s ease-in-out infinite alternate;
+  }
+
+  .ai-glow {
+    animation: ai-pulse 2s ease-in-out infinite;
+  }
+
+  .neon-text {
+    text-shadow: var(--glow-success);
+  }
+
+  .trading-card {
+    background: var(--gradient-card);
+    border: 2px solid hsl(var(--trading-primary));
+    box-shadow: var(--shadow-trading);
+  }
+
+  .ai-container {
+    background: var(--gradient-ai);
+    border: 2px solid hsl(var(--ai-border));
+    box-shadow: var(--shadow-ai);
+  }
+
+  .elite-badge {
+    background: hsl(var(--trading-accent));
+    color: hsl(var(--background));
+    animation: badge-glow 1.5s ease-in-out infinite alternate;
+  }
+
+  .trading-button {
+    background: hsl(var(--trading-accent));
+    border: 1px solid hsl(var(--trading-accent));
+    color: hsl(var(--background));
+    font-family: var(--font-headers);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .trading-button:hover {
+    background: hsl(var(--trading-accent) / 0.9);
+    box-shadow: var(--glow-success);
+    transform: translateY(-2px);
+  }
+
+  .confidence-bar {
+    background: hsl(var(--muted));
+    overflow: hidden;
+    border-radius: 9999px;
+  }
+
+  .confidence-fill {
+    background: hsl(var(--trading-accent));
+    box-shadow: var(--glow-success);
+    animation: confidence-pulse 2s ease-in-out infinite;
+  }
+
+  .signal-header {
+    font-family: var(--font-headers);
+    color: hsl(var(--trading-primary));
+    text-shadow: var(--glow-primary);
+  }
+}
+
+@layer utilities {
+  /* Trading-specific animations */
+  @keyframes trading-pulse {
+    0% { box-shadow: var(--shadow-trading); }
+    100% { box-shadow: var(--shadow-trading), var(--glow-primary); }
+  }
+
+  @keyframes ai-pulse {
+    0% { box-shadow: var(--shadow-ai); }
+    50% { box-shadow: var(--shadow-ai), var(--glow-ai); }
+    100% { box-shadow: var(--shadow-ai); }
+  }
+
+  @keyframes badge-glow {
+    0% { box-shadow: 0 0 5px hsl(var(--trading-accent)); }
+    100% { box-shadow: 0 0 15px hsl(var(--trading-accent)), 0 0 25px hsl(var(--trading-accent)); }
+  }
+
+  @keyframes confidence-pulse {
+    0% { box-shadow: var(--glow-success); }
+    50% { box-shadow: var(--glow-success), 0 0 20px hsl(var(--trading-accent)); }
+    100% { box-shadow: var(--glow-success); }
+  }
+
+  @keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+  }
+
+  @keyframes glow {
+    0% { text-shadow: 0 0 5px hsl(var(--trading-accent)); }
+    100% { text-shadow: 0 0 15px hsl(var(--trading-accent)), 0 0 25px hsl(var(--trading-accent)); }
+  }
+
+  .shine-effect::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsla(var(--foreground) / 0.2), transparent);
+    animation: shine 3s infinite;
   }
 }

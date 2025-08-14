@@ -36,6 +36,10 @@ export default {
 					DEFAULT: 'hsl(var(--destructive))',
 					foreground: 'hsl(var(--destructive-foreground))'
 				},
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))'
+				},
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'
@@ -52,6 +56,19 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				trading: {
+					primary: 'hsl(var(--trading-primary))',
+					secondary: 'hsl(var(--trading-secondary))',
+					accent: 'hsl(var(--trading-accent))',
+					danger: 'hsl(var(--trading-danger))',
+					warning: 'hsl(var(--trading-warning))'
+				},
+				ai: {
+					border: 'hsl(var(--ai-border))',
+					header: 'hsl(var(--ai-header))',
+					content: 'hsl(var(--ai-content))',
+					glow: 'hsl(var(--ai-glow))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -62,6 +79,22 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
+			},
+			fontFamily: {
+				trading: 'var(--font-trading)',
+				headers: 'var(--font-headers)'
+			},
+			backgroundImage: {
+				'gradient-trading': 'var(--gradient-trading)',
+				'gradient-ai': 'var(--gradient-ai)',
+				'gradient-card': 'var(--gradient-card)'
+			},
+			boxShadow: {
+				'trading': 'var(--shadow-trading)',
+				'ai': 'var(--shadow-ai)',
+				'glow-primary': 'var(--glow-primary)',
+				'glow-success': 'var(--glow-success)',
+				'glow-ai': 'var(--glow-ai)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
