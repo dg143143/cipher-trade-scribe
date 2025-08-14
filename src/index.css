@@ -195,6 +195,22 @@ All colors MUST be HSL for proper dark/light mode support.
     text-shadow: var(--glow-success);
   }
 
+  /* Matrix/Hacker Theme Styles */
+  .matrix-bg {
+    background: linear-gradient(45deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+  }
+
+  .hacker-border {
+    border: 2px solid #00ff41;
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+  }
+
+  .terminal-text {
+    font-family: 'Courier New', monospace;
+    color: #00ff41;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+  }
+
   .trading-card {
     background: var(--gradient-card);
     border: 2px solid hsl(var(--trading-primary));
