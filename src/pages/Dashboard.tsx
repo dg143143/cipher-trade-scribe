@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { TradingWidget } from '@/components/trading/TradingWidget';
@@ -6,28 +6,16 @@ import { AdminPanel } from '@/components/admin/AdminPanel';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { MatrixRain } from '@/components/ui/matrix-rain';
+import { User } from '@supabase/supabase-js';
 
 const Dashboard = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState<string>('user');
   const [loading, setLoading] = useState(true);
   const [showTrading, setShowTrading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    checkAuthAndRole();
-    
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT' || !session) {
-        navigate('/');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const checkAuthAndRole = async () => {
+  const checkAuthAndRole = useCallback(async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       
@@ -54,7 +42,20 @@ const Dashboard = () => {
       console.error('Auth check error:', error);
       navigate('/');
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    checkAuthAndRole();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        navigate('/');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate, checkAuthAndRole]);
 
   const handleSignOut = async () => {
     try {
