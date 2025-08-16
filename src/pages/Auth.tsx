@@ -7,7 +7,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { MatrixRain } from '@/components/ui/matrix-rain';
-import { useAuth } from '@/hooks/useAuth';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -15,17 +14,17 @@ const Auth = () => {
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { isAdmin, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    if (!authLoading) {
-      if (isAdmin) {
-        navigate('/admin');
-      } else if (supabase.auth.getSession()) {
+    // Check if user is already logged in
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
         navigate('/trading');
       }
-    }
-  }, [isAdmin, authLoading, navigate]);
+    };
+    checkAuth();
+  }, [navigate]);
 
   const cleanupAuthState = () => {
     Object.keys(localStorage).forEach((key) => {
@@ -74,7 +73,7 @@ const Auth = () => {
           if (signUpData.user) {
             toast.success('Admin account created and logged in!');
             setTimeout(() => {
-              navigate('/admin');
+              window.location.href = '/trading';
             }, 1000);
           }
         } else if (signInError) {
@@ -82,15 +81,14 @@ const Auth = () => {
         } else {
           toast.success('Admin login successful!');
           setTimeout(() => {
-            navigate('/admin');
+            window.location.href = '/trading';
           }, 1000);
         }
       } else {
         throw new Error('Invalid admin credentials');
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Login failed';
-      toast.error(errorMessage);
+    } catch (error: any) {
+      toast.error(error.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -116,9 +114,8 @@ const Auth = () => {
           window.location.href = '/trading';
         }, 1000);
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Login failed';
-      toast.error(errorMessage);
+    } catch (error: any) {
+      toast.error(error.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -148,9 +145,8 @@ const Auth = () => {
       if (data.user) {
         toast.success('Account created! Please check your email for verification.');
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Registration failed';
-      toast.error(errorMessage);
+    } catch (error: any) {
+      toast.error(error.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
