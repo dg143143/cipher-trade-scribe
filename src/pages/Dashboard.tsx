@@ -15,50 +15,46 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (!session) {
-          navigate('/auth');
-          return;
-        }
-
-        setUser(session.user);
-
-        // Check user role
-        const { data: roleData } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', session.user.id)
-          .single();
-
-        if (roleData) {
-          setUserRole(roleData.role);
-        }
-
-        // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-          (event, session) => {
-            if (event === 'SIGNED_OUT' || !session) {
-              navigate('/auth');
-            } else if (session) {
-              setUser(session.user);
-            }
-          }
-        );
-
-        setLoading(false);
-
-        return () => subscription.unsubscribe();
-      } catch (error) {
-        console.error('Auth check error:', error);
-        navigate('/auth');
+    checkAuthAndRole();
+    
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        navigate('/');
       }
-    };
+    });
 
-    checkAuth();
+    return () => subscription.unsubscribe();
   }, [navigate]);
+
+  const checkAuthAndRole = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        navigate('/');
+        return;
+      }
+
+      setUser(session.user);
+
+      // Check user role
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (roleData) {
+        setUserRole(roleData.role);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.error('Auth check error:', error);
+      navigate('/');
+    }
+  };
 
   const handleSignOut = async () => {
     try {
@@ -71,10 +67,10 @@ const Dashboard = () => {
 
       await supabase.auth.signOut({ scope: 'global' });
       toast.success('Logged out successfully');
-      window.location.href = '/auth';
+      window.location.href = '/';
     } catch (error) {
       console.error('Sign out error:', error);
-      window.location.href = '/auth';
+      window.location.href = '/';
     }
   };
 
@@ -110,6 +106,12 @@ const Dashboard = () => {
             </div>
             
             <div className="flex gap-4">
+              <Button
+                onClick={() => navigate('/trading')}
+                className="bg-emerald-600 hover:bg-emerald-500 font-trading"
+              >
+                TRADING SIGNALS
+              </Button>
               {isAdmin && (
                 <>
                   <Button
