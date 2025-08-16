@@ -19,7 +19,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter basename="/cipher-trade-scribe">
           <Routes>
             <Route path="/" element={<Auth />} />
             <Route path="/dashboard" element={<DashboardPage />} />

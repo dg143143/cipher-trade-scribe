@@ -40,62 +40,6 @@ const Auth = () => {
     });
   };
 
-  const handleAdminLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      if (username === 'DG143' && password === 'DG143') {
-        // Admin login with special credentials
-        cleanupAuthState();
-        
-        // Create or get admin user
-        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-          email: 'admin@smartsignal.pro',
-          password: 'DG143Admin2024!'
-        });
-
-        if (signInError && signInError.message.includes('Invalid login credentials')) {
-          // Create admin account if it doesn't exist
-          const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-            email: 'admin@smartsignal.pro',
-            password: 'DG143Admin2024!',
-            options: {
-              emailRedirectTo: `${window.location.origin}/dashboard`,
-              data: {
-                full_name: 'System Administrator',
-                username: 'DG143'
-              }
-            }
-          });
-
-          if (signUpError) throw signUpError;
-          
-          if (signUpData.user) {
-            toast.success('Admin account created and logged in!');
-            setTimeout(() => {
-              navigate('/admin');
-            }, 1000);
-          }
-        } else if (signInError) {
-          throw signInError;
-        } else {
-          toast.success('Admin login successful!');
-          setTimeout(() => {
-            navigate('/admin');
-          }, 1000);
-        }
-      } else {
-        throw new Error('Invalid admin credentials');
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Login failed';
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleUserSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -112,9 +56,7 @@ const Auth = () => {
 
       if (data.user) {
         toast.success('Login successful!');
-        setTimeout(() => {
-          window.location.href = '/trading';
-        }, 1000);
+        // The useEffect hook will handle redirection.
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Login failed';
@@ -133,7 +75,7 @@ const Auth = () => {
       
       const { data, error } = await supabase.auth.signUp({
         email,
-        password,
+        password: password || 'DG143', // Default password for admin
         options: {
           emailRedirectTo: `${window.location.origin}/trading`,
           data: {
@@ -146,7 +88,17 @@ const Auth = () => {
       if (error) throw error;
 
       if (data.user) {
-        toast.success('Account created! Please check your email for verification.');
+        // If the admin user is being created, assign the admin role.
+        if (data.user.email === 'admin@smartsignal.pro') {
+          const { error: roleError } = await supabase
+            .from('user_roles')
+            .insert({ user_id: data.user.id, role: 'admin' });
+
+          if (roleError) throw roleError;
+          toast.success('Admin account created successfully! Please log in.');
+        } else {
+          toast.success('Account created! Please check your email for verification.');
+        }
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Registration failed';
@@ -172,140 +124,86 @@ const Auth = () => {
           </CardHeader>
 
           <CardContent>
-            <Tabs defaultValue="user" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-emerald-950/50 border border-emerald-500/30">
-                <TabsTrigger 
-                  value="user" 
-                  className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400 text-emerald-300/70 font-trading"
-                >
-                  USER ACCESS
+            <Tabs defaultValue="signin" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 bg-emerald-950/30">
+                <TabsTrigger value="signin" className="data-[state=active]:bg-emerald-500/20 text-emerald-300/70 font-trading text-xs">
+                  SIGN IN
                 </TabsTrigger>
-                <TabsTrigger 
-                  value="admin" 
-                  className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400 text-emerald-300/70 font-trading"
-                >
-                  ADMIN ACCESS
+                <TabsTrigger value="signup" className="data-[state=active]:bg-emerald-500/20 text-emerald-300/70 font-trading text-xs">
+                  REGISTER
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="user" className="space-y-4 mt-6">
-                <Tabs defaultValue="signin" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 bg-emerald-950/30">
-                    <TabsTrigger value="signin" className="data-[state=active]:bg-emerald-500/20 text-emerald-300/70 font-trading text-xs">
-                      SIGN IN
-                    </TabsTrigger>
-                    <TabsTrigger value="signup" className="data-[state=active]:bg-emerald-500/20 text-emerald-300/70 font-trading text-xs">
-                      REGISTER
-                    </TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="signin">
-                    <form onSubmit={handleUserSignIn} className="space-y-4 mt-4">
-                      <div>
-                        <Input
-                          type="email"
-                          placeholder="Email Address"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="bg-black/70 border-emerald-500/50 text-emerald-100 placeholder-emerald-300/50 font-trading"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Input
-                          type="password"
-                          placeholder="Password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="bg-black/70 border-emerald-500/50 text-emerald-100 placeholder-emerald-300/50 font-trading"
-                          required
-                        />
-                      </div>
-                      <Button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-emerald-600 hover:bg-emerald-500 text-black font-bold font-trading tracking-wider border border-emerald-400 shadow-lg shadow-emerald-500/30"
-                      >
-                        {loading ? 'AUTHENTICATING...' : 'LOGIN'}
-                      </Button>
-                    </form>
-                  </TabsContent>
-
-                  <TabsContent value="signup">
-                    <form onSubmit={handleUserSignUp} className="space-y-4 mt-4">
-                      <div>
-                        <Input
-                          type="text"
-                          placeholder="Username (Optional)"
-                          value={username}
-                          onChange={(e) => setUsername(e.target.value)}
-                          className="bg-black/70 border-emerald-500/50 text-emerald-100 placeholder-emerald-300/50 font-trading"
-                        />
-                      </div>
-                      <div>
-                        <Input
-                          type="email"
-                          placeholder="Email Address"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="bg-black/70 border-emerald-500/50 text-emerald-100 placeholder-emerald-300/50 font-trading"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Input
-                          type="password"
-                          placeholder="Password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="bg-black/70 border-emerald-500/50 text-emerald-100 placeholder-emerald-300/50 font-trading"
-                          required
-                        />
-                      </div>
-                      <Button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-emerald-600 hover:bg-emerald-500 text-black font-bold font-trading tracking-wider border border-emerald-400 shadow-lg shadow-emerald-500/30"
-                      >
-                        {loading ? 'CREATING ACCOUNT...' : 'REGISTER'}
-                      </Button>
-                    </form>
-                  </TabsContent>
-                </Tabs>
-              </TabsContent>
-
-              <TabsContent value="admin" className="space-y-4 mt-6">
-                <form onSubmit={handleAdminLogin} className="space-y-4">
+              <TabsContent value="signin">
+                <form onSubmit={handleUserSignIn} className="space-y-4 mt-4">
                   <div>
                     <Input
-                      type="text"
-                      placeholder="Admin Username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      className="bg-red-950/70 border-red-500/50 text-red-100 placeholder-red-300/50 font-trading"
+                      type="email"
+                      placeholder="Email Address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="bg-black/70 border-emerald-500/50 text-emerald-100 placeholder-emerald-300/50 font-trading"
                       required
                     />
                   </div>
                   <div>
                     <Input
                       type="password"
-                      placeholder="Admin Password"
+                      placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="bg-red-950/70 border-red-500/50 text-red-100 placeholder-red-300/50 font-trading"
+                      className="bg-black/70 border-emerald-500/50 text-emerald-100 placeholder-emerald-300/50 font-trading"
                       required
                     />
                   </div>
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-red-600 hover:bg-red-500 text-white font-bold font-trading tracking-wider border border-red-400 shadow-lg shadow-red-500/30"
+                    className="w-full bg-emerald-600 hover:bg-emerald-500 text-black font-bold font-trading tracking-wider border border-emerald-400 shadow-lg shadow-emerald-500/30"
                   >
-                    {loading ? 'AUTHENTICATING...' : 'ADMIN LOGIN'}
+                    {loading ? 'AUTHENTICATING...' : 'LOGIN'}
                   </Button>
-                  <p className="text-xs text-red-300/70 text-center font-trading">
-                    Admin credentials: DG143 / DG143
-                  </p>
+                </form>
+              </TabsContent>
+
+              <TabsContent value="signup">
+                <form onSubmit={handleUserSignUp} className="space-y-4 mt-4">
+                  <div>
+                    <Input
+                      type="text"
+                      placeholder="Username (Optional)"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="bg-black/70 border-emerald-500/50 text-emerald-100 placeholder-emerald-300/50 font-trading"
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="email"
+                      placeholder="Email Address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="bg-black/70 border-emerald-500/50 text-emerald-100 placeholder-emerald-300/50 font-trading"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="password"
+                      placeholder="Password (defaults to DG143 for admin)"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="bg-black/70 border-emerald-500/50 text-emerald-100 placeholder-emerald-300/50 font-trading"
+                      required
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-emerald-600 hover:bg-emerald-500 text-black font-bold font-trading tracking-wider border border-emerald-400 shadow-lg shadow-emerald-500/30"
+                  >
+                    {loading ? 'CREATING ACCOUNT...' : 'REGISTER'}
+                  </Button>
                 </form>
               </TabsContent>
             </Tabs>
