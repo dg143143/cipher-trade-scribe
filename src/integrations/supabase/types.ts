@@ -167,27 +167,36 @@ export type Database = {
       }
       profiles: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           avatar_url: string | null
           created_at: string | null
           email: string | null
           full_name: string | null
           id: string
+          status: string | null
           updated_at: string | null
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           avatar_url?: string | null
           created_at?: string | null
           email?: string | null
           full_name?: string | null
           id: string
+          status?: string | null
           updated_at?: string | null
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           avatar_url?: string | null
           created_at?: string | null
           email?: string | null
           full_name?: string | null
           id?: string
+          status?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -227,6 +236,66 @@ export type Database = {
           },
         ]
       }
+      trading_signals: {
+        Row: {
+          ai_insight: string | null
+          confidence_level: string
+          confluence_count: number
+          created_at: string
+          entry_price: number
+          id: string
+          market_data: Json | null
+          signal_type: string
+          status: string
+          stop_loss: number
+          symbol: string
+          take_profit_1: number
+          take_profit_2: number | null
+          take_profit_3: number | null
+          technical_data: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_insight?: string | null
+          confidence_level: string
+          confluence_count?: number
+          created_at?: string
+          entry_price: number
+          id?: string
+          market_data?: Json | null
+          signal_type: string
+          status?: string
+          stop_loss: number
+          symbol: string
+          take_profit_1: number
+          take_profit_2?: number | null
+          take_profit_3?: number | null
+          technical_data?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_insight?: string | null
+          confidence_level?: string
+          confluence_count?: number
+          created_at?: string
+          entry_price?: number
+          id?: string
+          market_data?: Json | null
+          signal_type?: string
+          status?: string
+          stop_loss?: number
+          symbol?: string
+          take_profit_1?: number
+          take_profit_2?: number | null
+          take_profit_3?: number | null
+          technical_data?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -244,6 +313,39 @@ export type Database = {
           created_at?: string | null
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          ip_address: unknown | null
+          last_activity: string | null
+          session_token: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          ip_address?: unknown | null
+          last_activity?: string | null
+          session_token: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          ip_address?: unknown | null
+          last_activity?: string | null
+          session_token?: string
+          user_agent?: string | null
           user_id?: string
         }
         Relationships: []
@@ -291,6 +393,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      approve_user: {
+        Args: { _user_id: string }
+        Returns: undefined
+      }
+      create_user_account: {
+        Args: { _email: string; _full_name?: string; _password: string }
+        Returns: string
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
@@ -306,7 +416,15 @@ export type Database = {
         Args: { _user_id: string }
         Returns: undefined
       }
+      reject_user: {
+        Args: { _user_id: string }
+        Returns: undefined
+      }
       remove_admin_role: {
+        Args: { _user_id: string }
+        Returns: undefined
+      }
+      remove_user: {
         Args: { _user_id: string }
         Returns: undefined
       }

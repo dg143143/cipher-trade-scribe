@@ -8,10 +8,12 @@ import { TradingSignal, TradingMode } from '@/types/trading';
 import { binanceApi } from '@/services/binanceApi';
 import { tradingAnalysis } from '@/utils/tradingAnalysis';
 import { aiService } from '@/services/aiService';
+import { tradingSignalsService } from '@/services/tradingSignalsService';
 import { SignalCard } from './SignalCard';
 import { AIInsightPanel } from './AIInsightPanel';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
 
 export const TradingWidget: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -67,6 +69,52 @@ export const TradingWidget: React.FC = () => {
         description: `${symbolUpper} signal analysis complete`,
         variant: "default"
       });
+
+      // Save signal to database if user is authenticated
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const confidenceLevel = tradingSignal.confluenceFactors.length >= 6 ? 'very_high' :
+                                  tradingSignal.confluenceFactors.length >= 4 ? 'high' :
+                                  tradingSignal.confluenceFactors.length >= 2 ? 'medium' : 'low';
+
+          await tradingSignalsService.saveSignal({
+            symbol: symbolUpper,
+            signal_type: tradingSignal.action.includes('Buy') ? 'bullish' : 'bearish',
+            entry_price: tradingSignal.entry,
+            stop_loss: tradingSignal.stopLoss,
+            take_profit_1: tradingSignal.takeProfit.tp1,
+            take_profit_2: tradingSignal.takeProfit.tp2,
+            take_profit_3: tradingSignal.takeProfit.tp3,
+            confidence_level: confidenceLevel,
+            confluence_count: tradingSignal.confluenceFactors.length,
+            ai_insight: aiInsight,
+            technical_data: {
+              swingHigh: tradingSignal.levels.swingHigh,
+              swingLow: tradingSignal.levels.swingLow,
+              pivot: tradingSignal.levels.pivot,
+              supports: [tradingSignal.levels.support.s1, tradingSignal.levels.support.s2],
+              resistances: [tradingSignal.levels.resistance.r1, tradingSignal.levels.resistance.r2],
+              demandZone: tradingSignal.zones.demandZone,
+              supplyZone: tradingSignal.zones.supplyZone,
+              fvgZone: tradingSignal.zones.fvgZone,
+              volumeProfile: tradingSignal.volumeProfile,
+              liquidityPool: tradingSignal.liquidityPool,
+              marketStructure: tradingSignal.marketStructure,
+              mtfa: tradingSignal.mtfa
+            },
+            market_data: {
+              price: tradingSignal.price,
+              buyVolume: tradingSignal.volume.buyVolume,
+              sellVolume: tradingSignal.volume.sellVolume,
+              volumeImbalance: tradingSignal.volume.imbalance
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Failed to save signal:', error);
+        // Don't show error to user as signal generation was successful
+      }
 
     } catch (error) {
       console.error('Signal generation error:', error);
