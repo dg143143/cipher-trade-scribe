@@ -20,7 +20,7 @@ const Auth = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate('/trading');
+        navigate('/dashboard');
       }
     };
     checkAuth();
@@ -73,7 +73,7 @@ const Auth = () => {
           if (signUpData.user) {
             toast.success('Admin account created and logged in!');
             setTimeout(() => {
-              window.location.href = '/trading';
+              window.location.href = '/dashboard';
             }, 1000);
           }
         } else if (signInError) {
@@ -81,7 +81,7 @@ const Auth = () => {
         } else {
           toast.success('Admin login successful!');
           setTimeout(() => {
-            window.location.href = '/trading';
+            window.location.href = '/dashboard';
           }, 1000);
         }
       } else {
@@ -111,7 +111,7 @@ const Auth = () => {
       if (data.user) {
         toast.success('Login successful!');
         setTimeout(() => {
-          window.location.href = '/trading';
+          window.location.href = '/dashboard';
         }, 1000);
       }
     } catch (error: any) {
@@ -132,7 +132,7 @@ const Auth = () => {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/trading`,
+          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             full_name: username || email.split('@')[0],
             username: username || email.split('@')[0]
@@ -300,7 +300,7 @@ const Auth = () => {
                     {loading ? 'AUTHENTICATING...' : 'ADMIN LOGIN'}
                   </Button>
                   <p className="text-xs text-red-300/70 text-center font-trading">
-                    Admin credentials: DG143 / DG143
+                    Default credentials: DG143 / DG143
                   </p>
                 </form>
               </TabsContent>
