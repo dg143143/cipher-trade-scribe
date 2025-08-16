@@ -15,17 +15,17 @@ const Auth = () => {
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { isAdmin, loading: authLoading } = useAuth();
+  const { session, isAdmin, loading: authLoading } = useAuth();
 
   useEffect(() => {
     if (!authLoading) {
       if (isAdmin) {
         navigate('/admin');
-      } else if (supabase.auth.getSession()) {
+      } else if (session) {
         navigate('/trading');
       }
     }
-  }, [isAdmin, authLoading, navigate]);
+  }, [session, isAdmin, authLoading, navigate]);
 
   const cleanupAuthState = () => {
     Object.keys(localStorage).forEach((key) => {
