@@ -19,10 +19,9 @@ export const useAuth = () => {
         .from('user_roles')
         .select('role')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (error) {
-        // It's possible the user has no role entry, so we don't throw an error.
         console.warn('Error fetching user role:', error.message);
         setIsAdmin(false);
         return;

@@ -78,7 +78,7 @@ export const TradingWidget: React.FC = () => {
                                   tradingSignal.confluenceFactors.length >= 4 ? 'high' :
                                   tradingSignal.confluenceFactors.length >= 2 ? 'medium' : 'low';
 
-          await tradingSignalsService.saveSignal({
+          const saveResult = await tradingSignalsService.saveSignal({
             symbol: symbolUpper,
             signal_type: tradingSignal.action.includes('Buy') ? 'bullish' : 'bearish',
             entry_price: tradingSignal.entry,
@@ -110,6 +110,10 @@ export const TradingWidget: React.FC = () => {
               volumeImbalance: tradingSignal.volume.imbalance
             }
           });
+
+          if (saveResult.error) {
+            console.error('Failed to save signal:', saveResult.error);
+          }
         }
       } catch (error) {
         console.error('Failed to save signal:', error);

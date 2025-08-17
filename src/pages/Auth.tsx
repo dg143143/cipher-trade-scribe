@@ -61,7 +61,7 @@ const Auth = () => {
             email: 'admin@smartsignal.pro',
             password: 'DG143Admin2024!',
             options: {
-              emailRedirectTo: `${window.location.origin}/dashboard`,
+              emailRedirectTo: `${window.location.origin}/cipher-trade-scribe/admin`,
               data: {
                 full_name: 'System Administrator',
                 username: 'DG143'
@@ -140,7 +140,7 @@ const Auth = () => {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/trading`,
+          emailRedirectTo: `${window.location.origin}/cipher-trade-scribe/trading`,
           data: {
             full_name: username || email.split('@')[0],
             username: username || email.split('@')[0]

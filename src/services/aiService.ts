@@ -1,10 +1,17 @@
 import axios from 'axios';
 import { TradingSignal, AIInsight } from '@/types/trading';
 
-const OPENROUTER_API_KEY = "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";
+// Use environment variable or fallback to empty string
+const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || "";
 
 export const aiService = {
   async generateEliteInsight(signal: TradingSignal): Promise<AIInsight> {
+    // If no API key is available, return fallback analysis
+    if (!OPENROUTER_API_KEY) {
+      console.warn("OpenRouter API key not found, using fallback analysis");
+      return this.generateFallbackAnalysis(signal);
+    }
+
     const prompt = `
 You are ELITE-AI, a world-class trading strategist with 20 years of institutional experience.
 Analyze this ${signal.symbol} setup and deliver a single, powerful paragraph that sounds like a Bloomberg Pro Terminal alert.

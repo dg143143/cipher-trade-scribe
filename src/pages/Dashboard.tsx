@@ -67,10 +67,10 @@ const Dashboard = () => {
 
       await supabase.auth.signOut({ scope: 'global' });
       toast.success('Logged out successfully');
-      window.location.href = '/';
+      navigate('/');
     } catch (error) {
       console.error('Sign out error:', error);
-      window.location.href = '/';
+      navigate('/');
     }
   };
 

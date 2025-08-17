@@ -286,17 +286,8 @@ export const AdminPanel = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-black/90 border-2 border-red-500/50 shadow-2xl shadow-red-500/20">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-red-400 font-trading neon-text">
-            🛡️ ADMIN CONTROL PANEL
-          </CardTitle>
-          <p className="text-red-300/70 font-trading">
-            SYSTEM ADMINISTRATOR ACCESS - USER MANAGEMENT
-          </p>
-        </CardHeader>
-
-        <CardContent>
+      <Card className="bg-black/90 border-2 border-emerald-500/50 shadow-2xl shadow-emerald-500/20">
+        <CardContent className="p-6">
           <div className="mb-6 grid grid-cols-2 md:grid-cols-5 gap-4">
             <Card className="bg-emerald-950/50 border-emerald-500/30">
               <CardHeader className="pb-2">
@@ -637,7 +628,6 @@ export const AdminPanel = () => {
                 )}
               </div>
             )}
-        </CardContent>
       </Card>
     </div>
   );
