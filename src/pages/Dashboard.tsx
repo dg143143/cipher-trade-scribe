@@ -106,12 +106,6 @@ const Dashboard = () => {
             </div>
             
             <div className="flex gap-4">
-              <Button
-                onClick={() => navigate('/trading')}
-                className="bg-emerald-600 hover:bg-emerald-500 font-trading"
-              >
-                TRADING SIGNALS
-              </Button>
               {isAdmin && (
                 <>
                   <Button
